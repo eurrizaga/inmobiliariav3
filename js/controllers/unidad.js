@@ -31,8 +31,8 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
         }
         else{
             $scope.selectedUnidad = {
-                tipo_doc:"DNI",
-                mailing: true
+                venta:true,
+                alquiler: true
             };
             $scope.editMode = false;
         }
@@ -48,9 +48,9 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
     $scope.closeEdit = function(){
         $scope.selectedUnidad = angular.copy(auxUnidad);
         $scope.showUnidad = false;
-        $scope.fProp.$setPristine();
+        $scope.fUnidad.$setPristine();
     }
-    $scope.saveProp = function(){
+    $scope.saveUnidad = function(){
         console.log($scope.selectedUnidad);
         var success = function(result){
             toaster.pop({
@@ -61,7 +61,7 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
                 timeout: 600
             });
             if (!$scope.editMode){
-                $scope.propietarios.unshift($scope.selectedUnidad);
+                $scope.unidades.unshift($scope.selectedUnidad);
             }
             $scope.closeEdit();
             $scope.loading = false;

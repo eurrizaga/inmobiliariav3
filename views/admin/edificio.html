@@ -1,7 +1,7 @@
 <toaster-container></toaster-container>
 <div class="row wrapper border-bottom white-bg page-heading" >
     <div class="col-lg-10">
-        <h2>Unidades</h2>
+        <h2>Edificios</h2>
         <ol class="breadcrumb">
             <li>
                 <a href="index.html">Inicio</a>
@@ -10,20 +10,20 @@
                 <a>Administrar</a>
             </li>
             <li class="active">
-                <strong>Unidades</strong>
+                <strong>Edificios</strong>
             </li>
         </ol>
     </div>
     <div class="col-lg-2"></div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight" ng-hide="showUnidad">
+<div class="wrapper wrapper-content animated fadeInRight" ng-hide="showEdificio">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Listado de propietarios</h5>
+                    <h5>Listado de edificios</h5>
                     <div class="ibox-tools" uib-dropdown="">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="abrirUnidad()"><i class="fa fa-plus"></i>&nbsp;Nuevo Propietario</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="abrirEdificio()"><i class="fa fa-plus"></i>&nbsp;Nuevo Edificio</button>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -31,30 +31,21 @@
                     <table datatable="ng" dt-options="dtOptions" class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                         <tr>
-                            <th>Código</th>
-                            <th>Edificio</th>
-                            <th>Propietario</th>
-                            <th>Tipo de Unidad</th>
-                            <th>Venta</th>
-                            <th>Alquiler</th>
-                            <th>Carpeta</th>
-                            <th>Fecha de Ult. Op.</th>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                            <th>Cochera</th>
+                            <th>Departamento</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="u in unidades">
-                            <td>{{ u.codigo }}</td>
-                            <td>{{ u.edificio_nombre }}</td>
-                            <td>{{ u.propietario_apellido }}, {{ u.propietario_nombre }}</td>
-                            <td>{{ u.tipo_unidad }}</td>
-
-                            <td>{{ u.hab_venta }}</td>
-                            <td>{{ u.hab_alquiler }}</td>
-                            <td>{{ u.carpeta }}</td>
-                            <td>{{ u.fecha_ultima_op }}</td>
+                        <tr ng-repeat="u in edificios">
+                            <td>{{ u.nombre }}</td>
+                            <td>{{ u.direccion }}</td>
+                            <td><input icheck type="checkbox" ng-model="u.contiene_cochera"/></td>
+                            <td><input icheck type="checkbox" ng-model="u.contiene_depto"/></td>
                             <td>
-                                <a href="" ng-click="abrirUnidad(u)" title='Editar'><i class="fa fa-edit text-navy"></i></a>
+                                <a href="" ng-click="abrirEdificio(u)" title='Editar'><i class="fa fa-edit text-navy"></i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -62,6 +53,67 @@
                 
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" ng-show="showEdificio">
+    <div class="ibox float-e-margins" >
+        <div class="ibox-title">
+            <h5>Nuevo edificio</h5>
+            <div class="ibox-tools" uib-dropdown="">
+                <a ng-click="closeEdit()" title="Cerrar"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <loader ng-show="loading"></loader>
+            <form name="fEdificio" class="form-horizontal" novalidate>
+                <p>Ingrese los datos del nuevo edificio.</p>
+                <div class="row">
+                    <div class = "col-sm-12">
+                        <div class="form-group" ng-class="{ 'has-error': (fEdificio.nombre.$invalid && fEdificio.nombre.$dirty)}">
+                            <label class="col-sm-2">Nombre</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="nombre" placeholder="nombre" class="form-control" ng-model="selectedEdificio.nombre" ng-required="true"> 
+                                <span ng-show="fEdificio.nombre.$invalid && fEdificio.nombre.$dirty">Campo requerido</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class = "col-sm-12">
+                        <div class="form-group" ng-class="{ 'has-error': (fEdificio.direccion.$invalid && fEdificio.direccion.$dirty)}">
+                            <label class="col-sm-2">Dirección</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="direccion" placeholder="direccion" class="form-control" ng-model="selectedEdificio.direccion" ng-required="true"><span ng-show="fEdificio.direccion.$invalid && fEdificio.direccion.$dirty">{{fEdificio.direccion.$errorMessage}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class = "col-sm-12">
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-5">
+                                <input icheck type="checkbox" ng-model="selectedEdificio.contiene_depto"><i></i> Departamentos
+                            </div>
+                            <div class="col-sm-5">
+                                <input icheck type="checkbox" ng-model="selectedEdificio.contiene_cochera"><i></i> Cocheras
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span class="col-sm-1" style="font-weight:bold;">Observaciones</span>
+                    <div class="col-sm-12">
+                        <textarea class="form-control" rows="5" style="resize:none" ng-model="selectedEdificio.observaciones"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-white pull-right" type="submit" ng-click="closeEdit();">Cancelar</button>
+                        <button class="btn btn-primary pull-right" type="submit" ng-click="saveEdificio();" ng-disabled="fEdificio.$invalid || fEdificio.$pristine">Guardar cambios</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

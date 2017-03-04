@@ -1,6 +1,6 @@
 var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster) {
     var auxUnidad;
-    $scope.showUnidad = false;
+    $scope.showEdificio = false;
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withDOM('<"html5buttons"B>lTfgitp')
         .withButtons([
@@ -20,24 +20,27 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
                 }
             }
         ]);
-    $scope.nuevaUnidad = function(){
-        $scope.abrirUnidad();  
+    $scope.nuevoEdificio = function(){
+        $scope.abrirEdificio();  
     }
-    $scope.abrirUnidad = function(u){
+    $scope.abrirEdificio = function(u){
         if (u){
-            $scope.selectedUnidad = u;
+            $scope.selectedEdificio = u;
             auxUnidad = angular.copy(u);
             $scope.editMode = true;
         }
         else{
-            $scope.selectedUnidad = {
-                tipo_doc:"DNI",
-                mailing: true
+            $scope.selectedEdificio = {
+                nombre:"",
+                direccion:"",
+                observaciones:"",
+                contiene_cochera: false,
+                contiene_depto: true
             };
             $scope.editMode = false;
         }
             
-        $scope.showUnidad = true;
+        $scope.showEdificio = true;
         /*
         var modalInstance = $uibModal.open({
             templateUrl: 'views/modals/propietario.html',
@@ -46,13 +49,14 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
         */
     }
     $scope.closeEdit = function(){
-        $scope.selectedUnidad = angular.copy(auxUnidad);
-        $scope.showUnidad = false;
-        $scope.fProp.$setPristine();
+        $scope.selectedEdificio = angular.copy(auxUnidad);
+        $scope.showEdificio = false;
+        $scope.fEdificio.$setPristine();
     }
-    $scope.saveProp = function(){
-        console.log($scope.selectedUnidad);
+    $scope.saveEdificio = function(){
         var success = function(result){
+           $scope.selectedEdificio.contiene_cochera?$scope.selectedEdificio.contiene_cochera=true:$scope.selectedEdificio.contiene_cochera=false;
+            $scope.selectedEdificio.contiene_depto?$scope.selectedEdificio.contiene_depto=true:$scope.selectedEdificio.contiene_depto=false;
             toaster.pop({
                 type: 'success',
                 //title: 'Title example',
@@ -61,7 +65,7 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
                 timeout: 600
             });
             if (!$scope.editMode){
-                $scope.propietarios.unshift($scope.selectedUnidad);
+                $scope.edificios.unshift($scope.selectedEdificio);
             }
             $scope.closeEdit();
             $scope.loading = false;
@@ -70,29 +74,35 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
             toaster.pop({
                 type: 'error',
                 //title: 'Title example',
-                body: 'Error guardando unidad.',
+                body: 'Error guardando edificio.',
                 showCloseButton: true,
                 timeout: 600
             });
             $scope.loading = false;
         }
         $scope.loading = true;
+        $scope.selectedEdificio.contiene_cochera = + $scope.selectedEdificio.contiene_cochera;
+        $scope.selectedEdificio.contiene_depto = + $scope.selectedEdificio.contiene_depto;
         if (!$scope.editMode){
-            netService.post('unidad', $scope.selectedUnidad, success, failed);
+            netService.post('edificio', $scope.selectedEdificio, success, failed);
         }
         else{
-            netService.put('unidad', $scope.selectedUnidad, success, failed);   
+            netService.put('edificio', $scope.selectedEdificio, success, failed);   
         }
     }
     $scope.setTipoDoc = function(value){
-        $scope.selectedUnidad.tipo_doc = value;
+        $scope.selectedEdificio.tipo_doc = value;
     }
 
     var init = function(){
         $scope.loading = true;
-        netService.get('unidades', function(data){
+        netService.get('edificios', function(data){
+            for (var i in data){
+                Number(data[i].contiene_cochera)?data[i].contiene_cochera=true:data[i].contiene_cochera=false;
+                Number(data[i].contiene_depto)?data[i].contiene_depto=true:data[i].contiene_depto=false;
+            }
             $scope.loading = false;
-            $scope.unidades = data;
+            $scope.edificios = data;
         })
     }
     init();

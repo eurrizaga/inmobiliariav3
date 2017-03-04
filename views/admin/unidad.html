@@ -21,9 +21,9 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Listado de propietarios</h5>
+                    <h5>Listado de unidades</h5>
                     <div class="ibox-tools" uib-dropdown="">
-                        <button type="button" class="btn btn-sm btn-primary" ng-click="abrirUnidad()"><i class="fa fa-plus"></i>&nbsp;Nuevo Propietario</button>
+                        <button type="button" class="btn btn-sm btn-primary" ng-click="abrirUnidad()"><i class="fa fa-plus"></i>&nbsp;Nueva Unidad</button>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -62,6 +62,220 @@
                 
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" ng-show="showUnidad">
+    <div class="ibox float-e-margins" >
+        <div class="ibox-title">
+            <h5>Nuevo propietario</h5>
+            <div class="ibox-tools" uib-dropdown="">
+                <a ng-click="closeEdit()" title="Cerrar"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <loader ng-show="loading"></loader>
+            <form name="fUnidad" class="form-horizontal" novalidate>
+                <p>Ingrese los datos del nuevo propietario.</p>
+                <div class="row">
+                    <div class = "col-sm-6">
+                        <div class="form-group" ng-class="{ 'has-error': (fUnidad.edificio.$invalid && fUnidad.edificio.$dirty)}">
+                            <label class="col-sm-2">Edificio</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-disabled="true"> 
+                                    <span class="input-group-btn"> <button type="button" class="btn btn-primary">Go!</button> </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "col-sm-6">
+                        <div class="form-group" ng-class="{ 'has-error': (fUnidad.propietario.$invalid && fUnidad.propietario.$dirty)}">
+                            <label class="col-sm-2">Propietario</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-disabled="true"> 
+                                    <span class="input-group-btn"> <button type="button" class="btn btn-primary">Go!</button> </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class = "col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2">Operaciones disponibles</label>
+                            <div class="col-sm-5">
+                                <input icheck type="checkbox" ng-model="selectedUnidad.contiene_depto"><i></i> Venta
+                            </div>
+                            <div class="col-sm-5">
+                                <input icheck type="checkbox" ng-model="selectedUnidad.contiene_cochera"><i></i> Alquiler
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class = "col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-2">Tipo de unidad</label>
+                            <div class="col-sm-5">
+                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="d"> Departamento </label> </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="c"> Cochera </label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+                
+                <div ng-if="selectedUnidad.tipo_unidad == 'c'">
+                    <div class="row">
+                        <div class = "col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.numero.$invalid && fUnidad.numero.$dirty)}">
+                                <label class="col-sm-2">Número</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="numero" placeholder="numero" class="form-control" ng-model="selectedUnidad.numero" ng-required="true"><span ng-show="fUnidad.numero.$invalid && fUnidad.numero.$dirty">{{fUnidad.numero.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-2">Categoría</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" name="account" ng-model="selectedUnidad.categoria">
+                                        <option value="">(Ninguna)</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class = "col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.ancho.$invalid && fUnidad.ancho.$dirty)}">
+                                <label class="col-sm-2">Ancho</label>
+                                <div class="col-sm-10">
+                                    <input name="ancho" type="text" placeholder="Ancho" class="form-control" ng-model="selectedUnidad.ancho" ng-required="true"> 
+                                    <span ng-show="fUnidad.ancho.$invalid && fUnidad.ancho.$dirty">Campo requerido</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.largo.$invalid && fUnidad.largo.$dirty)}">
+                                <label class="col-sm-2">Largo</label>
+                                <div class="col-sm-10">
+                                    <input name="largo" type="text" placeholder="Largo" class="form-control" ng-model="selectedUnidad.largo" ng-required="true"> 
+                                    <span ng-show="fUnidad.largo.$invalid && fUnidad.largo.$dirty">Campo requerido</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class = "col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.subsuelo.$invalid && fUnidad.subsuelo.$dirty)}">
+                                <label class="col-sm-2">Piso/Subsuelo</label>
+                                <div class="col-sm-10" >
+                                    <input type="text" name="subsuelo" placeholder="Piso/Subsuelo" class="form-control" ng-model="selectedUnidad.subsuelo" ng-required="true" validate="{'type':'integer'}"> 
+                                    <span ng-show="fUnidad.subsuelo.$invalid && fUnidad.subsuelo.$dirty">Campo requerido</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.dist_ascensor.$invalid && fUnidad.dist_ascensor.$dirty)}">
+                                <label class="col-sm-2">Ascensor</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="dist_ascensor" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_ascensor" ng-required="true"> 
+                                    <span ng-show="fUnidad.dist_ascensor.$invalid && fUnidad.dist_ascensor.$dirty">Campo requerido</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.dist_esc_caracol.$invalid && fUnidad.dist_esc_caracol.$dirty)}">
+                                <label class="col-sm-2">Esc. Caracol</label>
+                                <div class="col-sm-10" >
+                                    <input name="dist_esc_caracol" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_caracol" ng-required="true"> 
+                                    <span ng-show="fUnidad.dist_esc_caracol.$invalid && fUnidad.dist_esc_caracol.$dirty">Campo requerido</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.dist_esc_bristol.$invalid && fUnidad.dist_esc_bristol.$dirty)}">
+                                <label class="col-sm-2">Esc. Bristol</label>
+                                <div class="col-sm-10" >
+                                    <input name="dist_esc_bristol" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_bristol"> 
+                                    <span ng-show="fUnidad.dist_esc_bristol.$invalid && fUnidad.dist_esc_bristol.$dirty">{{fUnidad.dist_esc_bristol.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.escDerecha.$invalid && fUnidad.escDerecha.$dirty)}">
+                                <label class="col-sm-2">Escalera Derecha</label>
+                                <div class="col-sm-10">
+                                    <input name="escDerecha" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_der" > 
+                                    <span ng-show="fUnidad.escDerecha.$invalid && fUnidad.escDerecha.$dirty">{{fUnidad.escDerecha.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.escIzq.$invalid && fUnidad.escIzq.$dirty)}">
+                                <label class="col-sm-2">Escalera Izquierda</label>
+                                <div class="col-sm-10">
+                                    <input name="escIzq" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_izq" > 
+                                    <span ng-show="fUnidad.escIzq.$invalid && fUnidad.escIzq.$dirty">{{fUnidad.escIzq.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="selectedUnidad.tipo_unidad == 'd'">
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group" ng-class="{ 'has-error': (fUnidad.codigo.$invalid && fUnidad.codigo.$dirty)}">
+                            <label class="col-sm-2">Código</label>
+                            <div class="col-sm-10">
+                                <input name="codigo" type="text" placeholder="codigo" class="form-control" ng-model="selectedUnidad.codigo"> 
+                                <span ng-show="fUnidad.codigo.$invalid && fUnidad.codigo.$dirty">{{fUnidad.codigo.$errorMessage}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" ng-class="{ 'has-error': (fUnidad.carpeta.$invalid && fUnidad.carpeta.$dirty)}">
+                            <label class="col-sm-2">Carpeta</label>
+                            <div class="col-sm-10">
+                                <input name="carpeta" type="text" placeholder="Carpeta" class="form-control" ng-model="selectedUnidad.carpeta" validate="{'type': 'integer'}"> 
+                                <span ng-show="fUnidad.carpeta.$invalid && fUnidad.carpeta.$dirty">{{fUnidad.carpeta.$errorMessage}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <span class="col-sm-1" style="font-weight:bold;">Observaciones</span>
+                    <div class="col-sm-12">
+                        <textarea class="form-control" rows="5" style="resize:none" ng-model="selectedUnidad.observaciones"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-white pull-right" type="submit" ng-click="closeEdit();">Cancelar</button>
+                        <button class="btn btn-primary pull-right" type="submit" ng-click="saveProp();" ng-disabled="fUnidad.$invalid || fUnidad.$pristine">Guardar cambios</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

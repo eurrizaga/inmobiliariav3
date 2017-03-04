@@ -37,7 +37,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
             templateUrl: "views/common/content.html",
         })
         .state('admin.propietario', {
-            url: "/admin/propietario",
+            url: "/propietario",
             templateUrl: "views/admin/propietario.html",
             controller: PropietarioCtrl,
             data: { pageTitle: 'Propietarios' },
@@ -68,7 +68,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
             }
         })
         .state('admin.unidad', {
-            url: "/admin/unidad",
+            url: "/unidad",
             templateUrl: "views/admin/unidad.html",
             controller: UnidadCtrl,
             data: { pageTitle: 'Unidades' },
@@ -93,13 +93,16 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
                             serie: true,
                             name: 'datatables.buttons',
                             files: ['js/plugins/dataTables/angular-datatables.buttons.min.js']
+                        },
+                        {
+                            files: ['css/plugins/iCheck/custom.css','js/plugins/iCheck/icheck.min.js']
                         }
                     ]);
                 }
             }
         })
         .state('admin.edificio', {
-            url: "/admin/edificio",
+            url: "/edificio",
             templateUrl: "views/admin/edificio.html",
             controller: EdificioCtrl,
             data: { pageTitle: 'Edificios' },
@@ -124,6 +127,9 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
                             serie: true,
                             name: 'datatables.buttons',
                             files: ['js/plugins/dataTables/angular-datatables.buttons.min.js']
+                        },
+                        {
+                            files: ['css/plugins/iCheck/custom.css','js/plugins/iCheck/icheck.min.js']
                         }
                     ]);
                 }
