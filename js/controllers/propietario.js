@@ -71,7 +71,8 @@ var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, 
 
     var init = function(){
         $scope.loading = true;
-        netService.get('propietarios', function(data){
+        $scope.dtext = [ 'csv', 'excel', 'pdf', 'print'];
+        netService.get('propietarios', null, function(data){
             $scope.loading = false;
             $scope.propietarios = data;
             $scope.dtconfig = {

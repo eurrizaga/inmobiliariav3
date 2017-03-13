@@ -362,7 +362,8 @@ function dtSearch($compile){
         replace: true,
         scope: {
             'config': '=',
-            'loading': '='
+            'loading': '=',
+            'extensions': '='
         },
         link: function (scope, ele, attrs) {
             scope.$watch(attrs.dynamic, function(html) {
@@ -372,14 +373,18 @@ function dtSearch($compile){
         },
         templateUrl: 'views/common/dt-search.html',
         controller: function($scope, DTOptionsBuilder, $sce, $compile){
-            $scope.dtOptions = DTOptionsBuilder.newOptions()
-                .withDOM('<"html5buttons"B>lTfgitp')
-                .withButtons([
-                    {extend: 'copy'},
-                    {extend: 'csv'},
-                    {extend: 'excel', title: 'ExampleFile'},
-                    {extend: 'pdf', title: 'ExampleFile'},
-                    {extend: 'print',
+            var extendOptions = [];
+            if ($scope.extensions){
+                if ($scope.extensions.indexOf('copy') != -1)
+                    extendOptions.push({extend: 'copy'})
+                if ($scope.extensions.indexOf('csv') != -1)
+                    extendOptions.push({extend: 'csv'})
+                if ($scope.extensions.indexOf('excel') != -1)
+                    extendOptions.push({extend: 'excel', title: ($scope.title?$scope.title:'Excel')})
+                if ($scope.extensions.indexOf('pdf') != -1)
+                    extendOptions.push({extend: 'pdf', title: ($scope.title?$scope.title:'Pdf')})
+                if ($scope.extensions.indexOf('print') != -1)
+                    extendOptions.push({extend: 'print',
                         customize: function (win){
                             $(win.document.body).addClass('white-bg');
                             $(win.document.body).css('font-size', '10px');
@@ -387,8 +392,12 @@ function dtSearch($compile){
                                 .addClass('compact')
                                 .css('font-size', 'inherit');
                         }
-                    }
-                ]);
+                    });
+
+            }
+            $scope.dtOptions = DTOptionsBuilder.newOptions()
+                .withDOM('<"html5buttons"B>lTfgitp')
+                .withButtons(extendOptions);
             
             $scope.trustedHtml = function(h){
                 return h;

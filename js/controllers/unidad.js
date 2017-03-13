@@ -1,7 +1,4 @@
-var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster) {
-    var auxUnidad;
-    $scope.showUnidad = false;
-    $scope.selected = [];
+var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuilder) {
     $scope.dtOptions = DTOptionsBuilder.newOptions()
         .withDOM('<"html5buttons"B>lTfgitp')
         .withButtons([
@@ -21,6 +18,10 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
                 }
             }
         ]);
+
+    var auxUnidad;
+    $scope.showUnidad = false;
+    $scope.selected = [];
     $scope.nuevaUnidad = function(){
         $scope.abrirUnidad();  
     }
@@ -32,8 +33,10 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
         }
         else{
             $scope.selectedUnidad = {
-                venta:true,
-                alquiler: true
+                tipo_unidad:'d',
+                hab_venta: false,
+                hab_alquiler: true,
+
             };
             $scope.editMode = false;
         }
@@ -93,6 +96,11 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
         var modalInstance = $uibModal.open({
             template: '<dt-search loading="loading" config="dtconfig"></dt-search><div class="modal-footer"><button class="btn btn-default" ng-click="cancel()">Cancel</button></div>',
             //templateUrl: 'views/admin/propietario_search.html',
+            resolve: {
+               tipo_unidad: function() {
+                   return $scope.selectedUnidad.tipo_unidad
+               }
+            },
             controller: tipo + 'SelectCtrl'
         });
         modalInstance.result.then(function (selectedItem) {
@@ -106,7 +114,8 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
 
     var init = function(){
         $scope.loading = true;
-        netService.get('unidades', function(data){
+        $scope.dtext = [ 'csv', 'excel', 'pdf', 'print'];
+        netService.get('unidades', null, function(data){
             $scope.loading = false;
             $scope.unidades = data;
             $scope.dtconfig = {
@@ -167,10 +176,13 @@ var UnidadCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toast
         
 };
 
-var propietarioSelectCtrl = function($scope, $uibModalInstance, netService) {
+var propietarioSelectCtrl = function($scope, tipo_unidad, $uibModalInstance, netService, DTOptionsBuilder) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withDOM('<"html5buttons"B>lTfgitp')
+        .withButtons([]);
     var init = function(){
         $scope.loading = true;
-        netService.get('propietarios', function(data){
+        netService.get('propietarios', null, function(data){
             $scope.loading = false;
             $scope.propietarios = data;
             $scope.dtconfig = {
@@ -217,12 +229,30 @@ var propietarioSelectCtrl = function($scope, $uibModalInstance, netService) {
     };
 
 };
-var edificioSelectCtrl = function($scope, $uibModalInstance, netService) {
+var edificioSelectCtrl = function($scope, tipo_unidad, $uibModalInstance, netService, DTOptionsBuilder) {
+    $scope.dtOptions = DTOptionsBuilder.newOptions()
+        .withDOM('<"html5buttons"B>lTfgitp')
+        .withButtons([]);
     var init = function(){
         $scope.loading = true;
-        netService.get('edificios', function(data){
+        var p = []
+        if (tipo_unidad == 'd')
+            p.push({
+                'field': 'contiene_depto',
+                'value': 1
+            });
+        else
+            p.push({
+                'field': 'contiene_cochera',
+                'value': 1
+            });
+        netService.get('edificios', p, function(data){
             $scope.loading = false;
             $scope.edificios = data;
+            for (var i in data){
+                Number(data[i].contiene_cochera)?data[i].contiene_cochera=true:data[i].contiene_cochera=false;
+                Number(data[i].contiene_depto)?data[i].contiene_depto=true:data[i].contiene_depto=false;
+            }
             $scope.dtconfig = {
                 title: 'Listado de edificios',
                 showCreate: false,
@@ -248,11 +278,11 @@ var edificioSelectCtrl = function($scope, $uibModalInstance, netService) {
                     },
                     {
                         head: 'Cochera',
-                        body: '<input icheck type="checkbox" ng-model="r.contiene_cochera"/>'
+                        body: '<input icheck type="checkbox" ng-model="r.contiene_cochera" ng-disabled="true"/>'
                     },
                     {
                         head: 'Departamento',
-                        body: '<input icheck type="checkbox" ng-model="r.contiene_depto"/>'
+                        body: '<input icheck type="checkbox" ng-model="r.contiene_depto" ng-disabled="true"/>'
                     },
                     {
                         head: 'Acciones',

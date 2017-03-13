@@ -10,13 +10,14 @@
     ])
     .factory('netService', function($http){
         var urlBE = '/urrizagaBE/';
-        var get = function(info, cb, cb2){
+        var get = function(info, params, cb, cb2){
             $http({
                 method: 'post',
                 url: urlBE,
                 data: {
                     operation: 'get',
-                    target: info
+                    target: info,
+                    params: params
                 },
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function(response){

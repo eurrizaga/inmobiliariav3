@@ -90,7 +90,8 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
 
     var init = function(){
         $scope.loading = true;
-        netService.get('edificios', function(data){
+        $scope.dtext = [ 'csv', 'excel', 'pdf', 'print'];
+        netService.get('edificios', null, function(data){
             for (var i in data){
                 Number(data[i].contiene_cochera)?data[i].contiene_cochera=true:data[i].contiene_cochera=false;
                 Number(data[i].contiene_depto)?data[i].contiene_depto=true:data[i].contiene_depto=false;
@@ -120,11 +121,11 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
                     },
                     {
                         head: 'Cochera',
-                        body: '<input icheck type="checkbox" ng-model="r.contiene_cochera"/>'
+                        body: '<input icheck type="checkbox" ng-model="r.contiene_cochera" ng-disabled="true"/>'
                     },
                     {
                         head: 'Departamento',
-                        body: '<input icheck type="checkbox" ng-model="r.contiene_depto"/>'
+                        body: '<input icheck type="checkbox" ng-model="r.contiene_depto" ng-disabled="true"/>'
                     },
                     {
                         head: 'Acciones',

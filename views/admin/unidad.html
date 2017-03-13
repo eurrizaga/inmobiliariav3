@@ -17,12 +17,12 @@
     <div class="col-lg-2"></div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" ng-hide="showUnidad">
-    <dt-search loading="loading" config="dtconfig"></dt-search>
+    <dt-search loading="loading" config="dtconfig" extensions="dtext"></dt-search>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" ng-show="showUnidad">
     <div class="ibox float-e-margins" >
         <div class="ibox-title">
-            <h5>Nuevo propietario</h5>
+            <h5>Nueva unidad</h5>
             <div class="ibox-tools" uib-dropdown="">
                 <a ng-click="closeEdit()" title="Cerrar"><i class="fa fa-times"></i></a>
             </div>
@@ -30,7 +30,20 @@
         <div class="ibox-content">
             <loader ng-show="loading"></loader>
             <form name="fUnidad" class="form-horizontal" novalidate>
-                <p>Ingrese los datos del nuevo propietario.</p>
+                <p>Ingrese los datos de la nueva unidad.</p>
+                <div class="row">
+                    <div class = "col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-1">Tipo de unidad</label>
+                            <div class="col-sm-5">
+                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="d"> Departamento </label> </div>
+                            </div>
+                            <div class="col-sm-5">
+                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="c"> Cochera </label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class = "col-sm-6">
                         <div class="form-group" ng-class="{ 'has-error': (fUnidad.edificio.$invalid && fUnidad.edificio.$dirty)}">
@@ -58,33 +71,16 @@
                 <div class="row">
                     <div class = "col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-2">Operaciones disponibles</label>
+                            <label class="col-sm-1">Operaciones disponibles</label>
                             <div class="col-sm-5">
-                                <input icheck type="checkbox" ng-model="selectedUnidad.contiene_depto"><i></i> Venta
+                                <input icheck type="checkbox" ng-model="selectedUnidad.hab_venta"><i></i> Venta
                             </div>
                             <div class="col-sm-5">
-                                <input icheck type="checkbox" ng-model="selectedUnidad.contiene_cochera"><i></i> Alquiler
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class = "col-sm-12">
-                        <div class="form-group">
-                            <label class="col-sm-2">Tipo de unidad</label>
-                            <div class="col-sm-5">
-                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="d"> Departamento </label> </div>
-                            </div>
-                            <div class="col-sm-5">
-                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="c"> Cochera </label></div>
+                                <input icheck type="checkbox" ng-model="selectedUnidad.hab_alquiler"><i></i> Alquiler
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-                
-                
                 <div ng-if="selectedUnidad.tipo_unidad == 'c'">
                     <div class="row">
                         <div class = "col-sm-6">
