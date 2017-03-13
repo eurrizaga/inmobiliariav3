@@ -41,12 +41,6 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
         }
             
         $scope.showEdificio = true;
-        /*
-        var modalInstance = $uibModal.open({
-            templateUrl: 'views/modals/propietario.html',
-            controller: 'propietarioEditCtrl'
-        });
-        */
     }
     $scope.closeEdit = function(){
         $scope.selectedEdificio = angular.copy(auxUnidad);
@@ -103,6 +97,42 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
             }
             $scope.loading = false;
             $scope.edificios = data;
+            $scope.dtconfig = {
+                title: 'Listado de edificios',
+                showCreate: true,
+                createInfo: {
+                    name: 'Nuevo Edificio',
+                    f: $scope.nuevoEdificio
+                },
+                operations: [{
+                    'name': 'Editar',
+                    'icon': 'fa-edit',
+                    'function': $scope.abrirEdificio
+                }],
+                dataFormat: [
+                    {
+                        head: 'Nombre',
+                        body: '{{ r.nombre }}'
+                    },
+                    {
+                        head: 'Dirección',
+                        body: '{{ r.direccion }}'
+                    },
+                    {
+                        head: 'Cochera',
+                        body: '<input icheck type="checkbox" ng-model="r.contiene_cochera"/>'
+                    },
+                    {
+                        head: 'Departamento',
+                        body: '<input icheck type="checkbox" ng-model="r.contiene_depto"/>'
+                    },
+                    {
+                        head: 'Acciones',
+                        body: '<a ng-repeat="op in config.operations" href="" ng-click="op.function(r)" title="{{op.name}}"><i class="fa text-navy" ng-class="op.icon"></i></a>'
+                    }
+                ],
+                dataSrc: data
+            }
         })
     }
     init();

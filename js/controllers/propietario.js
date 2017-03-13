@@ -1,25 +1,6 @@
 var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster) {
     var auxProp;
     $scope.showProp = false;
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDOM('<"html5buttons"B>lTfgitp')
-        .withButtons([
-            {extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
-                customize: function (win){
-                    $(win.document.body).addClass('white-bg');
-                    $(win.document.body).css('font-size', '10px');
-
-                    $(win.document.body).find('table')
-                        .addClass('compact')
-                        .css('font-size', 'inherit');
-                }
-            }
-        ]);
     $scope.nuevoPropietario = function(){
         $scope.abrirPropietario();  
     }
@@ -93,6 +74,42 @@ var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, 
         netService.get('propietarios', function(data){
             $scope.loading = false;
             $scope.propietarios = data;
+            $scope.dtconfig = {
+                title: 'Listado de propietarios',
+                showCreate: true,
+                createInfo: {
+                    name: 'Nuevo Propietario',
+                    f: $scope.nuevoPropietario
+                },
+                operations: [{
+                    'name': 'Editar',
+                    'icon': 'fa-edit',
+                    'function': $scope.abrirPropietario
+                }],
+                dataFormat: [
+                    {
+                        head: 'Apellido',
+                        body: '{{ r.apellido }}'
+                    },
+                    {
+                        head: 'Nombre',
+                        body: '{{ r.nombre }}'
+                    },
+                    {
+                        head: 'Documento',
+                        body: '{{ r.tipo_doc }} - {{ r.nro_doc }}'
+                    },
+                    {
+                        head: 'Localidad',
+                        body: '{{ r.localidad }}'
+                    },
+                    {
+                        head: 'Acciones',
+                        body: '<a ng-repeat="op in config.operations" href="" ng-click="op.function(r)" title="{{op.name}}"><i class="fa text-navy" ng-class="op.icon"></i></a>'
+                    }
+                ],
+                dataSrc: data
+            }
         })
     }
     init();

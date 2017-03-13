@@ -343,6 +343,59 @@ function loader(){
     }
 }
 
+function dynamic($compile) {
+      return {
+        restrict: 'A',
+        replace: true,
+        link: function (scope, ele, attrs) {
+          scope.$watch(attrs.dynamic, function(html) {
+            ele.html(html);
+            $compile(ele.contents())(scope);
+          });
+        }
+      };
+}
+
+function dtSearch($compile){
+    return{
+        restrict:'E',
+        replace: true,
+        scope: {
+            'config': '=',
+            'loading': '='
+        },
+        link: function (scope, ele, attrs) {
+            scope.$watch(attrs.dynamic, function(html) {
+                ele.html(html);
+                $compile(ele.contents())(scope);
+            });
+        },
+        templateUrl: 'views/common/dt-search.html',
+        controller: function($scope, DTOptionsBuilder, $sce, $compile){
+            $scope.dtOptions = DTOptionsBuilder.newOptions()
+                .withDOM('<"html5buttons"B>lTfgitp')
+                .withButtons([
+                    {extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'ExampleFile'},
+                    {extend: 'pdf', title: 'ExampleFile'},
+                    {extend: 'print',
+                        customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+                ]);
+            
+            $scope.trustedHtml = function(h){
+                return h;
+            }
+        }
+    }
+}
 /**
  *
  * Pass all functions into module
@@ -356,4 +409,6 @@ angular
     .directive('iboxToolsFullScreen', iboxToolsFullScreen)
     .directive('validate', validate)
     .directive('icheck', icheck)
-    .directive('loader', loader);
+    .directive('loader', loader)
+    .directive('dtSearch', dtSearch)
+    .directive('dynamic', dynamic);
