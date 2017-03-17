@@ -49,7 +49,7 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
     }
     $scope.saveEdificio = function(){
         var success = function(result){
-           $scope.selectedEdificio.contiene_cochera?$scope.selectedEdificio.contiene_cochera=true:$scope.selectedEdificio.contiene_cochera=false;
+            $scope.selectedEdificio.contiene_cochera?$scope.selectedEdificio.contiene_cochera=true:$scope.selectedEdificio.contiene_cochera=false;
             $scope.selectedEdificio.contiene_depto?$scope.selectedEdificio.contiene_depto=true:$scope.selectedEdificio.contiene_depto=false;
             toaster.pop({
                 type: 'success',

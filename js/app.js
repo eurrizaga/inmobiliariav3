@@ -67,6 +67,17 @@
             put: put
         };
     })
-
+    .filter('nameUnidad', function() {
+      return function(input) {
+        var out;
+        switch (input){
+            case 'c': out = 'Cochera'; break;
+            case 'd': out = 'Departamento'; break;
+            case 'k': out = 'Casa'; break;
+            case 't': out = 'Terreno'; break;
+        }
+        return out;
+      };
+    })
 })();
 

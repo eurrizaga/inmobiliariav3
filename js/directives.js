@@ -243,6 +243,14 @@ function validate() {
 
         //valid type
         switch (targetRE['type']){
+            case 'float':
+                var FLOAT_REGEXP =  /[-+]?[0-9]*\.?[0-9]+/; 
+                if (!FLOAT_REGEXP.test(modelValue)) {
+                    ctrl.$setValidity("validate", false);
+                    ctrl.$errorMessage = 'Número inválido';
+                    return false;
+                }
+            break;
             case 'integer':
                 var INTEGER_REGEXP =  /^\-?\d+$/; 
                 if (!INTEGER_REGEXP.test(modelValue)) {

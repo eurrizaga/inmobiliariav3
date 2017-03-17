@@ -36,10 +36,10 @@
                         <div class="form-group">
                             <label class="col-sm-1">Tipo de unidad</label>
                             <div class="col-sm-5">
-                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="d"> Departamento </label> </div>
+                                <div ><label > <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="d" ng-disabled="editMode"> Departamento </label> </div>
                             </div>
                             <div class="col-sm-5">
-                                <div><label> <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="c"> Cochera </label></div>
+                                <div ><label > <input icheck type="radio" name="tipoUnidad" ng-model="selectedUnidad.tipo_unidad" value="c" ng-disabled="editMode"> Cochera </label></div>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             <label class="col-sm-2">Edificio</label>
                             <div class="col-sm-10">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" ng-disabled="true"> 
+                                    <input type="text" class="form-control" ng-disabled="true" value="{{selected.edificio.nombre}}"> 
                                     <span class="input-group-btn"> <button type="button" class="btn btn-primary" ng-click="openModal('edificio')">Go!</button> </span>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@
                             <label class="col-sm-2">Propietario</label>
                             <div class="col-sm-10">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" ng-disabled="true"> 
+                                    <input type="text" class="form-control" ng-disabled="true" value="{{selected.propietario.nombre}}"> 
                                     <span class="input-group-btn"> <button type="button" class="btn btn-primary" ng-click="openModal('propietario')">Go!</button> </span>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.ancho.$invalid && fUnidad.ancho.$dirty)}">
                                 <label class="col-sm-2">Ancho</label>
                                 <div class="col-sm-10">
-                                    <input name="ancho" type="text" placeholder="Ancho" class="form-control" ng-model="selectedUnidad.ancho" ng-required="true"> 
+                                    <input name="ancho" type="text" placeholder="Ancho" class="form-control" ng-model="selectedUnidad.ancho" validate="{'type':'float', 'minValue': 1}" ng-required="true"> 
                                     <span ng-show="fUnidad.ancho.$invalid && fUnidad.ancho.$dirty">Campo requerido</span>
                                 </div>
                             </div>
@@ -122,7 +122,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.largo.$invalid && fUnidad.largo.$dirty)}">
                                 <label class="col-sm-2">Largo</label>
                                 <div class="col-sm-10">
-                                    <input name="largo" type="text" placeholder="Largo" class="form-control" ng-model="selectedUnidad.largo" ng-required="true"> 
+                                    <input name="largo" type="text" placeholder="Largo" class="form-control" ng-model="selectedUnidad.largo" validate="{'type':'float', 'minValue': 1}" ng-required="true"> 
                                     <span ng-show="fUnidad.largo.$invalid && fUnidad.largo.$dirty">Campo requerido</span>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.subsuelo.$invalid && fUnidad.subsuelo.$dirty)}">
                                 <label class="col-sm-2">Piso/Subsuelo</label>
                                 <div class="col-sm-10" >
-                                    <input type="text" name="subsuelo" placeholder="Piso/Subsuelo" class="form-control" ng-model="selectedUnidad.subsuelo" ng-required="true" validate="{'type':'integer'}"> 
+                                    <input type="text" name="subsuelo" placeholder="Piso/Subsuelo" class="form-control" ng-model="selectedUnidad.subsuelo" ng-required="true" validate="{'type':'integer', 'minValue': 1}"> 
                                     <span ng-show="fUnidad.subsuelo.$invalid && fUnidad.subsuelo.$dirty">Campo requerido</span>
                                 </div>
                             </div>
@@ -143,7 +143,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.dist_ascensor.$invalid && fUnidad.dist_ascensor.$dirty)}">
                                 <label class="col-sm-2">Ascensor</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="dist_ascensor" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_ascensor" ng-required="true"> 
+                                    <input type="text" name="dist_ascensor" placeholder="Distancia" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.dist_ascensor" ng-required="true"> 
                                     <span ng-show="fUnidad.dist_ascensor.$invalid && fUnidad.dist_ascensor.$dirty">Campo requerido</span>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.dist_esc_caracol.$invalid && fUnidad.dist_esc_caracol.$dirty)}">
                                 <label class="col-sm-2">Esc. Caracol</label>
                                 <div class="col-sm-10" >
-                                    <input name="dist_esc_caracol" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_caracol" ng-required="true"> 
+                                    <input name="dist_esc_caracol" type="text" placeholder="Distancia" validate="{'type':'integer', 'minValue': 1}" class="form-control" ng-model="selectedUnidad.dist_esc_caracol" ng-required="true"> 
                                     <span ng-show="fUnidad.dist_esc_caracol.$invalid && fUnidad.dist_esc_caracol.$dirty">Campo requerido</span>
                                 </div>
                             </div>
@@ -163,7 +163,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.dist_esc_bristol.$invalid && fUnidad.dist_esc_bristol.$dirty)}">
                                 <label class="col-sm-2">Esc. Bristol</label>
                                 <div class="col-sm-10" >
-                                    <input name="dist_esc_bristol" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_bristol"> 
+                                    <input name="dist_esc_bristol" type="text" placeholder="Distancia" validate="{'type':'integer', 'minValue': 1}" class="form-control" ng-model="selectedUnidad.dist_esc_bristol"> 
                                     <span ng-show="fUnidad.dist_esc_bristol.$invalid && fUnidad.dist_esc_bristol.$dirty">{{fUnidad.dist_esc_bristol.$errorMessage}}</span>
                                 </div>
                             </div>
@@ -174,7 +174,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.escDerecha.$invalid && fUnidad.escDerecha.$dirty)}">
                                 <label class="col-sm-2">Escalera Derecha</label>
                                 <div class="col-sm-10">
-                                    <input name="escDerecha" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_der" > 
+                                    <input name="escDerecha" type="text" placeholder="Distancia" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.dist_esc_der" > 
                                     <span ng-show="fUnidad.escDerecha.$invalid && fUnidad.escDerecha.$dirty">{{fUnidad.escDerecha.$errorMessage}}</span>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.escIzq.$invalid && fUnidad.escIzq.$dirty)}">
                                 <label class="col-sm-2">Escalera Izquierda</label>
                                 <div class="col-sm-10">
-                                    <input name="escIzq" type="text" placeholder="Distancia" class="form-control" ng-model="selectedUnidad.dist_esc_izq" > 
+                                    <input name="escIzq" type="text" placeholder="Distancia" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.dist_esc_izq" > 
                                     <span ng-show="fUnidad.escIzq.$invalid && fUnidad.escIzq.$dirty">{{fUnidad.escIzq.$errorMessage}}</span>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@
                         <div class="form-group" ng-class="{ 'has-error': (fUnidad.carpeta.$invalid && fUnidad.carpeta.$dirty)}">
                             <label class="col-sm-2">Carpeta</label>
                             <div class="col-sm-10">
-                                <input name="carpeta" type="text" placeholder="Carpeta" class="form-control" ng-model="selectedUnidad.carpeta" validate="{'type': 'integer'}"> 
+                                <input name="carpeta" type="text" placeholder="Carpeta" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.carpeta" validate="{'type': 'integer'}"> 
                                 <span ng-show="fUnidad.carpeta.$invalid && fUnidad.carpeta.$dirty">{{fUnidad.carpeta.$errorMessage}}</span>
                             </div>
                         </div>
@@ -216,13 +216,13 @@
                 <div class="form-group">
                     <span class="col-sm-1" style="font-weight:bold;">Observaciones</span>
                     <div class="col-sm-12">
-                        <textarea class="form-control" rows="5" style="resize:none" ng-model="selectedUnidad.observaciones"></textarea>
+                        <textarea class="form-control" rows="5" style="resize:none" ng-model="selectedUnidad.detalles"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button class="btn btn-white pull-right" type="submit" ng-click="closeEdit();">Cancelar</button>
-                        <button class="btn btn-primary pull-right" type="submit" ng-click="saveProp();" ng-disabled="fUnidad.$invalid || fUnidad.$pristine">Guardar cambios</button>
+                        <button class="btn btn-primary pull-right" type="submit" ng-click="saveUnidad();" ng-disabled="fUnidad.$invalid || fUnidad.$pristine || !selected.edificio || !selected.propietario">Guardar cambios</button>
                     </div>
                 </div>
             </form>
