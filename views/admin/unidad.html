@@ -16,7 +16,7 @@
     </div>
     <div class="col-lg-2"></div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight" ng-hide="showUnidad">
+<div id="tableContainer" class="wrapper wrapper-content animated fadeInRight" ng-hide="showUnidad">
     <dt-search loading="loading" config="dtconfig" extensions="dtext"></dt-search>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" ng-show="showUnidad">
@@ -191,6 +191,37 @@
                     </div>
                 </div>
                 <div ng-if="selectedUnidad.tipo_unidad == 'd'">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.piso.$invalid && fUnidad.piso.$dirty)}">
+                                <label class="col-sm-2">Piso</label>
+                                <div class="col-sm-10">
+                                    <input name="piso" type="text" placeholder="Piso" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.piso" > 
+                                    <span ng-show="fUnidad.piso.$invalid && fUnidad.piso.$dirty">{{fUnidad.piso.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.letra.$invalid && fUnidad.letra.$dirty)}">
+                                <label class="col-sm-2">Letra</label>
+                                <div class="col-sm-10">
+                                    <input name="letra" type="text" placeholder="Letra" class="form-control" ng-model="selectedUnidad.letra" > 
+                                    <span ng-show="fUnidad.letra.$invalid && fUnidad.letra.$dirty">{{fUnidad.letra.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group" ng-class="{ 'has-error': (fUnidad.ambientes.$invalid && fUnidad.ambientes.$dirty)}">
+                                <label class="col-sm-2">Ambientes</label>
+                                <div class="col-sm-10">
+                                    <input name="ambientes" type="text" placeholder="Ambientes" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.ambientes" > 
+                                    <span ng-show="fUnidad.ambientes.$invalid && fUnidad.ambientes.$dirty">{{fUnidad.ambientes.$errorMessage}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">

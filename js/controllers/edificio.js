@@ -58,11 +58,7 @@ var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toa
                 showCloseButton: true,
                 timeout: 600
             });
-            if (!$scope.editMode){
-                $scope.edificios.unshift($scope.selectedEdificio);
-            }
-            $scope.closeEdit();
-            $scope.loading = false;
+            $window.location.reload();
         }
         var failed = function(message){
             toaster.pop({

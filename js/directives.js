@@ -367,7 +367,7 @@ function dynamic($compile) {
 function dtSearch($compile){
     return{
         restrict:'E',
-        replace: true,
+        //replace: true,
         scope: {
             'config': '=',
             'loading': '=',
@@ -380,7 +380,7 @@ function dtSearch($compile){
             });
         },
         templateUrl: 'views/common/dt-search.html',
-        controller: function($scope, DTOptionsBuilder, $sce, $compile){
+        controller: function($scope, DTOptionsBuilder, $sce, $compile, DTColumnBuilder, DTColumnDefBuilder){
             var extendOptions = [];
             if ($scope.extensions){
                 if ($scope.extensions.indexOf('copy') != -1)
@@ -403,6 +403,14 @@ function dtSearch($compile){
                     });
 
             }
+            $scope.$watch('config', function(){
+                if ((!$scope.dataFormat) && ($scope.config)){
+                    $scope.dataFormat = $scope.config.dataFormat;
+                }
+            })
+                
+            $scope.dtInstance = {};
+            $scope.dtColumnDefs = [];
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withDOM('<"html5buttons"B>lTfgitp')
                 .withButtons(extendOptions);
@@ -410,6 +418,22 @@ function dtSearch($compile){
             $scope.trustedHtml = function(h){
                 return h;
             }
+            $scope.$on('reloadDT', function(){
+                $scope.reloadData();
+            })
+            $scope.reloadData = function() {
+               $scope.dtOptions = DTOptionsBuilder.newOptions()
+                .withDOM('<"html5buttons"B>lTfgitp')
+                .withButtons(extendOptions);
+               //$scope.dtInstance.reloadData();
+               //$scope.dtInstance._renderer.rerender(); 
+
+            }
+            /*
+            $scope.reloadData = function() {
+               $scope.dtInstance.rerender(); 
+            }
+            */
         }
     }
 }

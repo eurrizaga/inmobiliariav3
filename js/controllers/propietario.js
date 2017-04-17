@@ -41,11 +41,7 @@ var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, 
                 showCloseButton: true,
                 timeout: 600
             });
-            if (!$scope.editMode){
-                $scope.propietarios.unshift($scope.selectedProp);
-            }
-            $scope.closeEdit();
-            $scope.loading = false;
+            $window.location.reload();
         }
         var failed = function(message){
             toaster.pop({

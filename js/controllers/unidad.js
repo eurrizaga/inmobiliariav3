@@ -1,24 +1,4 @@
-var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuilder) {
-    $scope.dtOptions = DTOptionsBuilder.newOptions()
-        .withDOM('<"html5buttons"B>lTfgitp')
-        .withButtons([
-            {extend: 'copy'},
-            {extend: 'csv'},
-            {extend: 'excel', title: 'ExampleFile'},
-            {extend: 'pdf', title: 'ExampleFile'},
-
-            {extend: 'print',
-                customize: function (win){
-                    $(win.document.body).addClass('white-bg');
-                    $(win.document.body).css('font-size', '10px');
-
-                    $(win.document.body).find('table')
-                        .addClass('compact')
-                        .css('font-size', 'inherit');
-                }
-            }
-        ]);
-
+var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuilder, $rootScope, $window) {
     var auxUnidad;
     $scope.showUnidad = false;
     $scope.selected = [];
@@ -98,6 +78,30 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
         $scope.showUnidad = false;
         $scope.fUnidad.$setPristine();
     }
+    
+    $scope.setTipoDoc = function(value){
+        $scope.selectedUnidad.tipo_doc = value;
+    }
+    $scope.openModal = function(tipo){
+        var modalInstance = $uibModal.open({
+            template: '<dt-search loading="loading" config="dtconfig"></dt-search><div class="modal-footer"><button class="btn btn-default" ng-click="cancel()">Cancel</button></div>',
+            //templateUrl: 'views/admin/propietario_search.html',
+            resolve: {
+               tipo_unidad: function() {
+                   return $scope.selectedUnidad.tipo_unidad
+               }
+            },
+            controller: tipo + 'SelectCtrl'
+        });
+        modalInstance.result.then(function (selectedItem) {
+          $scope.fUnidad.$setDirty();
+          $scope.selected[tipo] = selectedItem;
+          console.log($scope.selected[tipo]);
+        }, function () {
+          //$log.info('Modal dismissed at: ' + new Date());
+        });
+    
+    }
     $scope.saveUnidad = function(){
         var success = function(result){
             toaster.pop({
@@ -107,14 +111,10 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
                 showCloseButton: true,
                 timeout: 600
             });
-            if (!$scope.editMode){
-                $scope.unidades.unshift($scope.selectedUnidad);
-            }
             $scope.selectedUnidad.hab_venta?$scope.selectedUnidad.hab_venta=true:$scope.selectedUnidad.hab_venta=false;
             $scope.selectedUnidad.hab_alquiler?$scope.selectedUnidad.hab_alquiler=true:$scope.selectedUnidad.hab_alquiler=false;
-
-            $scope.closeEdit();
-            $scope.loading = false;
+            $scope.unidades = [];
+            $window.location.reload();
 
         }
         var failed = function(message){
@@ -139,29 +139,6 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
             netService.put('unidad', $scope.selectedUnidad, success, failed);   
         }
     }
-    $scope.setTipoDoc = function(value){
-        $scope.selectedUnidad.tipo_doc = value;
-    }
-    $scope.openModal = function(tipo){
-        var modalInstance = $uibModal.open({
-            template: '<dt-search loading="loading" config="dtconfig"></dt-search><div class="modal-footer"><button class="btn btn-default" ng-click="cancel()">Cancel</button></div>',
-            //templateUrl: 'views/admin/propietario_search.html',
-            resolve: {
-               tipo_unidad: function() {
-                   return $scope.selectedUnidad.tipo_unidad
-               }
-            },
-            controller: tipo + 'SelectCtrl'
-        });
-        modalInstance.result.then(function (selectedItem) {
-          $scope.fUnidad.$setDirty();
-          $scope.selected[tipo] = selectedItem;
-          console.log($scope.selected[tipo]);
-        }, function () {
-          //$log.info('Modal dismissed at: ' + new Date());
-        });
-    
-    }
     var init = function(){
         $scope.loading = true;
         $scope.dtext = [ 'csv', 'excel', 'pdf', 'print'];
@@ -172,6 +149,7 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
                 Number(data[i].hab_venta)?data[i].hab_venta=true:data[i].hab_venta=false;
                 Number(data[i].hab_alquiler)?data[i].hab_alquiler=true:data[i].hab_alquiler=false;
             }
+
             $scope.dtconfig = {
                 title: 'Listado de unidades',
                 showCreate: true,
@@ -224,6 +202,7 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
                 ],
                 dataSrc: data
             }
+           
         })
     }
     init();
