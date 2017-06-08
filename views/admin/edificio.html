@@ -37,7 +37,7 @@
                             <label class="col-sm-2">Nombre</label>
                             <div class="col-sm-10">
                                 <input type="text" name="nombre" placeholder="nombre" class="form-control" ng-model="selectedEdificio.nombre" ng-required="true"> 
-                                <span ng-show="fEdificio.nombre.$invalid && fEdificio.nombre.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                         <div class="form-group" ng-class="{ 'has-error': (fEdificio.direccion.$invalid && fEdificio.direccion.$dirty)}">
                             <label class="col-sm-2">Dirección</label>
                             <div class="col-sm-10">
-                                <input type="text" name="direccion" placeholder="direccion" class="form-control" ng-model="selectedEdificio.direccion" ng-required="true"><span ng-show="fEdificio.direccion.$invalid && fEdificio.direccion.$dirty">{{fEdificio.direccion.$errorMessage}}</span>
+                                <input type="text" name="direccion" placeholder="direccion" class="form-control" ng-model="selectedEdificio.direccion" ng-required="true">
                             </div>
                         </div>
                     </div>

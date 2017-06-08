@@ -199,150 +199,169 @@ function minimalizaSidebar($timeout) {
         }
     };
 }
-
-function validate() {
-  return {
-    require: 'ngModel',
-    link: function(scope, elm, attrs, ctrl) {
-      //console.log(scope, elm, attrs, ctrl);
-      /*
-        "{
-            'type': 'integer', 
-            'minValue':0, 
-            'maxValue':8, 
-            'minLength': 2, 
-            'maxLength': 10, 
-            'compare': 'fieldName' 
-        }"
-        */
-      var targetRE;
-      try{
-        var aux = attrs['validate'].replace(/'/g, '"');
-        var targetRE = JSON.parse(aux);
-      }
-      catch(error){
-        //Útil para ver cuando la directiva falló. No borrar.
-        console.log("Couldn't parse " + attrs['name'] + " parameters.");
-        ctrl.$setValidity("validate", true);
-        return true;
-      }
-      
-      ctrl.$validators.integer = function(modelValue, viewValue) {
-        if (ctrl.$isEmpty(modelValue)) {
-            var required = (Boolean(attrs['ngRequired']) || (targetRE['required']));
-            if ((!ctrl.$pristine) && (required)){
-                ctrl.$errorMessage = 'Campo requerido';
-                ctrl.$setValidity("validate", false);
-                return false;
+function validate($compile) {
+      return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            var newElement = $compile('<span class="error-input pull-right" ng-class="{\'invisible\': !(' + elm[0].form.name + '.' + elm[0].name + '.$invalid && ' + elm[0].form.name + '.' + elm[0].name + '.$dirty)}">{{' + elm[0].form.name + '.' + elm[0].name + '.$errorMessage || \'ok\'}}</span>')(scope);
+            elm.after(newElement);
+            var targetRE, currentValue, listenerActive;
+            try{
+                var aux = attrs['validate'].replace(/'/g, '"');
+                var targetRE = JSON.parse(aux);
+                //var targetRE = scope.$eval(attrs['validate']);
             }
-            else{
-              ctrl.$setValidity("validate", true);
-              return true;
+            catch(error){
+                //Útil para ver cuando la directiva falló. No borrar.
+                if (scope[attrs['validate']]){
+                    var targetRE = scope[attrs['validate']];
+                }
+                else{
+                    console.log("Couldn't parse " + attrs['name'] + " parameters.");
+                    ctrl.$setValidity("validate", true);
+                    return true;
+                }
             }
-        }
-
-        //valid type
-        switch (targetRE['type']){
-            case 'float':
-                var FLOAT_REGEXP =  /[-+]?[0-9]*\.?[0-9]+/; 
-                if (!FLOAT_REGEXP.test(modelValue)) {
-                    ctrl.$setValidity("validate", false);
-                    ctrl.$errorMessage = 'Número inválido';
-                    return false;
+              
+            ctrl.$validators.change = function(modelValue, viewValue) {
+                if (ctrl.$isEmpty(modelValue)) {
+                    var required = (Boolean(attrs['ngRequired']) || (targetRE['required']));
+                    if ((!ctrl.$pristine) && (required)){
+                      ctrl.$errorMessage = 'Campo requerido';
+                      ctrl.$setValidity("validate", false);
+                      return false;
+                    }
+                    else{
+                      ctrl.$setValidity("validate", true);
+                      return true;
+                    }
                 }
-            break;
-            case 'integer':
-                var INTEGER_REGEXP =  /^\-?\d+$/; 
-                if (!INTEGER_REGEXP.test(modelValue)) {
-                    ctrl.$setValidity("validate", false);
-                    ctrl.$errorMessage = 'Número inválido';
-                    return false;
+                //valid type
+                switch (targetRE['type']){
+                    case 'float':
+                        var FLOAT_REGEXP =  /[-+]?[0-9]*\.?[0-9]+/; 
+                        if (!FLOAT_REGEXP.test(modelValue)) {
+                            ctrl.$setValidity("validate", false);
+                            ctrl.$errorMessage = 'Número inválido';
+                            return false;
+                        }
+                    break;
+                    case 'integer':
+                        var INTEGER_REGEXP =  /^\-?\d+$/; 
+                        if (!INTEGER_REGEXP.test(modelValue)) {
+                            ctrl.$setValidity("validate", false);
+                            ctrl.$errorMessage = 'Número inválido';
+                            return false;
+                        }
+                    break;
+                    case 'email': 
+                        var EMAIL_REGEXP = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z]{1,9})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+                        if (!EMAIL_REGEXP.test(modelValue)) {
+                            ctrl.$setValidity("validate", false);
+                            ctrl.$errorMessage = 'Correo inválido';
+                            return false;
+                        }
+                    break;
+                    case 'phone':
+                        var PHONE_REGEXP = /[^0-9\(\)\+\-\s]+/;
+                        if (PHONE_REGEXP.test(modelValue)) {
+                            ctrl.$setValidity("validate", false);
+                            ctrl.$errorMessage = 'Telefono inválido';
+                            return false;
+                        }
+                    break;
+                    case 'date': 
+                        var DATE_REGEXP = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
+                        if (!DATE_REGEXP.test(modelValue)) {
+                            ctrl.$setValidity("validate", false);
+                            ctrl.$errorMessage = 'Fecha inválida';
+                            return false;
+                        }
+                    break;
+                    case 'password': 
+                        if (targetRE['compare']){
+                            var compareValue = targetRE['compare'].split('.');
+                            var cAux = angular.copy(scope[compareValue[0]]);
+                            if (compareValue.length > 1){
+                                for (var i = 1; i < compareValue.length; i++){
+                                    cAux = cAux[compareValue[i]];
+                                }
+                            }
+                            if (!listenerActive){
+                                listenerActive = true;
+                                scope.$watch(targetRE['compare'], function(val){
+                                    if (currentValue != 1){
+                                        if ((val !== currentValue) || !val){
+                                            ctrl.$setValidity("validate", false);
+                                            ctrl.$errorMessage = 'Valores no coinciden';
+                                            return false;
+                                        }
+                                        else{
+                                            ctrl.$setValidity("validate", true);
+                                        }
+                                    }
+                                });
+                            }
+                            currentValue = modelValue;
+                            if ((cAux !== modelValue) || !cAux){
+                                ctrl.$setValidity("validate", false);
+                                ctrl.$errorMessage = 'Valores no coinciden';
+                                return false;
+                            }
+                        }
+                    break;
+                    default:break;
                 }
-            break;
-            case 'email': 
-                var EMAIL_REGEXP = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z]{1,9})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-                if (!EMAIL_REGEXP.test(modelValue)) {
-                    ctrl.$setValidity("validate", false);
-                    ctrl.$errorMessage = 'Correo inválido';
-                    return false;
-                }
-            break;
-            case 'phone':
-                var PHONE_REGEXP = /[^0-9\(\)\+\-\s]+/;
-                if (PHONE_REGEXP.test(modelValue)) {
-                    ctrl.$setValidity("validate", false);
-                    ctrl.$errorMessage = 'Teléfono inválido';
-                    return false;
-                }
-            break;
-            case 'date': 
-                var DATE_REGEXP = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
-                if (!DATE_REGEXP.test(modelValue)) {
-                    ctrl.$setValidity("validate", false);
-                    ctrl.$errorMessage = 'Fecha Inválida';
-                    return false;
-                }
-
-            break;
-            case 'password': 
-                if (targetRE['compare']){
-                    if (scope[targetRE['compare']] !== modelValue){
+                // min value
+                if (((targetRE['minValue']) || (targetRE['minValue'] == 0)) && (!isNaN(targetRE['minValue']))){
+                    var minValue = Number(targetRE['minValue']);
+                    var value = Number(modelValue);
+                    if (value < minValue){
                         ctrl.$setValidity("validate", false);
-                        ctrl.$errorMessage = 'Valores no coinciden';
+                        ctrl.$errorMessage = 'Valor debe ser mayor que ' + minValue;
                         return false;
                     }
                 }
-            break;
-            default:break;
+                // max value
+                if (((targetRE['maxValue']) || (targetRE['maxValue'] == 0)) && (!isNaN(targetRE['maxValue']))){
+                    var maxValue = Number(targetRE['maxValue']);
+                    var value = Number(modelValue);
+                    if (value > maxValue){
+                        ctrl.$setValidity("validate", false);
+                        ctrl.$errorMessage = 'Valor debe ser menor que ' + maxValue;
+                        return false;
+                    }
+                }
+                //min length
+                if ((targetRE['minLength']) || (targetRE['minLength'] == 0) && (!isNaN(targetRE['minLength']))){
+                    var minLength = Number(targetRE['minLength']);
+                    if (modelValue.length < minLength){
+                        ctrl.$setValidity("validate", false);
+                        // $translate(['validator.atLeast', 'validator.characters']).then(function (translation) {
+                            ctrl.$errorMessage = 'Valor debe ser de al menos ' + minLength + ' caracteres';
+                        // });
+                        return false;
+                    }
+                }
+                //max length
+                if ((targetRE['maxLength']) || (targetRE['maxLength'] == 0) && (!isNaN(targetRE['maxLength']))){
+                    var maxLength = Number(targetRE['maxLength']);
+                    if (modelValue.length > maxLength){
+                        ctrl.$setValidity("validate", false);
+                        // $translate(['validator.lessThan', 'validator.characters']).then(function (translation) {
+                             ctrl.$errorMessage = 'Valor debe ser de hasta ' + maxLength + ' caracteres';
+                        // });
+                        return false;
+                    }
+                }
+                ctrl.$setValidity("validate", true);
+                return true;
+                
+            };
+            
         }
-        // min value
-        if (((targetRE['minValue']) || (targetRE['minValue'] == 0)) && (!isNaN(targetRE['minValue']))){
-            var minValue = Number(targetRE['minValue']);
-            var value = Number(modelValue);
-            if (value < minValue){
-                ctrl.$setValidity("validate", false);
-                ctrl.$errorMessage = 'Debe ser mayor o igual que ' + minValue;
-                return false;
-            }
-        }
-        // max value
-        if (((targetRE['maxValue']) || (targetRE['maxValue'] == 0)) && (!isNaN(targetRE['maxValue']))){
-            var maxValue = Number(targetRE['maxValue']);
-            var value = Number(modelValue);
-            if (value > maxValue){
-                ctrl.$setValidity("validate", false);
-                ctrl.$errorMessage = 'Debe ser menor o igual que ' + maxValue;
-                return false;
-            }   
-        }
-        //min length
-        if ((targetRE['minLength']) || (targetRE['minLength'] == 0) && (!isNaN(targetRE['minLength']))){
-            var minLength = Number(targetRE['minLength']);
-            if (modelValue.length < minLength){
-                ctrl.$setValidity("validate", false);
-                ctrl.$errorMessage = 'Debe contener al menos ' + minLength + ' caracteres';
-                return false;
-            }
-        }
-
-        //max length
-        if ((targetRE['maxLength']) || (targetRE['maxLength'] == 0) && (!isNaN(targetRE['maxLength']))){
-            var maxLength = Number(targetRE['maxLength']);
-            if (modelValue.length > maxLength){
-                ctrl.$setValidity("validate", false);
-                $translate(['validator.lessThan', 'validator.characters']).then(function (translation) {
-                    ctrl.$errorMessage = 'Debe contener menos de ' + maxLength + ' caracteres';
-                });
-                return false;
-            }
-        }
-        ctrl.$setValidity("validate", true);
-        return true;
-        
       };
     }
-  };
-}
 
 function loader(){
     return{

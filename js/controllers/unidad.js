@@ -59,6 +59,19 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
         });
         */
     }
+    $scope.abrirAutorizaciones = function(u){
+        $scope.autorizarUnidad = true;
+        $scope.loading = true;
+        $scope.selectedUnidad = u;
+        netService.get('autorizaciones', {'id_unidad': u.id}, function(response){
+            $scope.loading = false;
+            $scope.showAutorizaciones = true;
+            $scope.autorizaciones = response;
+        }, function(error){
+            console.log(error);
+        });
+        
+    }
     $scope.checkChange = function(){
         console.log('$scope.selectedUnidad.tipo_unidad')
     }
@@ -76,6 +89,7 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
     $scope.closeEdit = function(){
         $scope.selectedUnidad = angular.copy(auxUnidad);
         $scope.showUnidad = false;
+        $scope.showAutorizaciones = false;
         $scope.fUnidad.$setPristine();
     }
     
@@ -139,6 +153,95 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
             netService.put('unidad', $scope.selectedUnidad, success, failed);   
         }
     }
+    $scope.operation = {
+        date: new Date(),
+        range:{
+            startDate: new Date(),
+            endDate: new Date()
+        }
+    };
+    $scope.saveAutorizacion = function(){
+        $scope.loading = true;
+        var offset = moment().utcOffset();
+        var dateFrom = angular.copy($scope.operation.range.startDate);
+        var dateTo = angular.copy($scope.operation.range.endDate);
+        var req = {
+            'unit': $scope.selectedUnidad.id,
+            'date': $scope.operation.date,
+            'from': moment(dateFrom).local().format('YYYY-MM-DD'),
+            'to': moment(dateTo).local().format('YYYY-MM-DD')
+        }
+        netService.post('autorizacion', req, function(response){
+            if (response.code == 1){
+                $scope.autorizaciones.push({
+                    'fecha_autorizacion': req.date,
+                    'fecha_desde': req.from,
+                    'fecha_hasta': req.to,
+                    'id_unidad':$scope.selectedUnidad.id
+
+                });
+                toaster.pop({
+                    type: 'success',
+                    //title: 'Title example',
+                    body: response.details,
+                    showCloseButton: true,
+                    timeout: 1500
+                });
+            }
+            else{
+                if (response.code === 0){
+                    toaster.pop({
+                        type: 'error',
+                        //title: 'Title example',
+                        body: response.details,
+                        showCloseButton: true,
+                        timeout: 1500
+                    });
+                }
+            }
+                
+            $scope.loading = false;
+            
+        }, function(error){
+            console.log(error);
+            $scope.loading = false;
+        });
+    }
+    $scope.eliminarAutorizacion = function(a, k){
+        $scope.loading = true;
+        var req = {
+            'id_unidad': $scope.selectedUnidad.id, 
+            'fecha_desde': a.fecha_desde,
+            'fecha_hasta': a.fecha_hasta
+        };
+        netService.put('autorizacion', req, function(response){
+            if (response.code == 1){
+                $scope.autorizaciones.splice(k, 1);
+                toaster.pop({
+                    type: 'success',
+                    //title: 'Title example',
+                    body: response.details,
+                    showCloseButton: true,
+                    timeout: 1500
+                });
+            }
+            else{
+                if (response.code === 0){
+                    toaster.pop({
+                        type: 'error',
+                        //title: 'Title example',
+                        body: response.details,
+                        showCloseButton: true,
+                        timeout: 1500
+                    });
+                }
+            }
+            $scope.loading = false;
+        }, function(error){
+            console.log(error);
+            $scope.loading = false;
+        });
+    }
     var init = function(){
         $scope.loading = true;
         $scope.dtext = [ 'csv', 'excel', 'pdf', 'print'];
@@ -161,6 +264,10 @@ var UnidadCtrl = function($scope, netService, $uibModal, toaster, DTOptionsBuild
                     'name': 'Editar',
                     'icon': 'fa-edit',
                     'function': $scope.abrirUnidad
+                },{
+                    'name': 'Autorizar',
+                    'icon': 'fa-handshake-o',
+                    'function': $scope.abrirAutorizaciones
                 }],
                 dataFormat: [
                     {

@@ -1,4 +1,4 @@
-var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster) {
+var EdificioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster, $window) {
     var auxUnidad;
     $scope.showEdificio = false;
     $scope.dtOptions = DTOptionsBuilder.newOptions()

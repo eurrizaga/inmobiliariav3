@@ -37,7 +37,7 @@
                             <label class="col-sm-2">Apellido</label>
                             <div class="col-sm-10">
                                 <input type="text" name="apellido" placeholder="Apellido" class="form-control" ng-model="selectedProp.apellido" ng-required="true"> 
-                                <span ng-show="fProp.apellido.$invalid && fProp.apellido.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                             <label class="col-sm-2">Nombres</label>
                             <div class="col-sm-10">
                                 <input type="text" name="nombre" placeholder="Nombres" class="form-control" ng-model="selectedProp.nombre" ng-required="true"> 
-                                <span ng-show="fProp.nombre.$invalid && fProp.nombre.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                                         </ul>
                                     </div>
                                     <input type="text" class="form-control" name="documento" placeholder="Número" ng-model="selectedProp.nro_doc" validate="{'type': 'integer'}" ng-required="true">
-                                    <span ng-show="fProp.documento.$invalid && fProp.documento.$dirty">{{fProp.documento.$errorMessage}}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                         <div class="form-group" ng-class="{ 'has-error': (fProp.cuit.$invalid && fProp.cuit.$dirty)}">
                             <label class="col-sm-2">CUIT</label>
                             <div class="col-sm-10">
-                                <input type="text" name="cuit" placeholder="CUIT" class="form-control" ng-model="selectedProp.cuit" validate="{'type': 'integer'}"><span ng-show="fProp.cuit.$invalid && fProp.cuit.$dirty">{{fProp.cuit.$errorMessage}}</span>
+                                <input type="text" name="cuit" placeholder="CUIT" class="form-control" ng-model="selectedProp.cuit" validate="{'type': 'integer'}">
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                             <label class="col-sm-2">Dirección</label>
                             <div class="col-sm-10">
                                 <input name="direccion" type="text" placeholder="Dirección" class="form-control" ng-model="selectedProp.direccion" ng-required="true"> 
-                                <span ng-show="fProp.direccion.$invalid && fProp.direccion.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                             <label class="col-sm-2">Localidad</label>
                             <div class="col-sm-10">
                                 <input name="localidad" type="text" placeholder="Localidad" class="form-control" ng-model="selectedProp.localidad" ng-required="true"> 
-                                <span ng-show="fProp.localidad.$invalid && fProp.localidad.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                             <label class="col-sm-2">Cod. Postal</label>
                             <div class="col-sm-10" >
                                 <input type="text" name="codPostal" placeholder="Cod. Postal" class="form-control" ng-model="selectedProp.cod_postal" ng-required="true"> 
-                                <span ng-show="fProp.codPostal.$invalid && fProp.codPostal.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                             <label class="col-sm-2">Provincia</label>
                             <div class="col-sm-10">
                                 <input type="text" name="provincia" placeholder="Provincia" class="form-control" ng-model="selectedProp.provincia" ng-required="true"> 
-                                <span ng-show="fProp.provincia.$invalid && fProp.provincia.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                             <label class="col-sm-2">País</label>
                             <div class="col-sm-10" >
                                 <input name="pais" type="text" placeholder="País" class="form-control" ng-model="selectedProp.pais" ng-required="true"> 
-                                <span ng-show="fProp.pais.$invalid && fProp.pais.$dirty">Campo requerido</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                             <label class="col-sm-2">Email</label>
                             <div class="col-sm-10" >
                                 <input name="email" type="text" placeholder="Email" class="form-control" ng-model="selectedProp.email" validate="{'type': 'email'}"> 
-                                <span ng-show="fProp.email.$invalid && fProp.email.$dirty">{{fProp.email.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                             <label class="col-sm-2">Tel. Fijo</label>
                             <div class="col-sm-10">
                                 <input name="telFijo" type="text" placeholder="Tel. Fijo" class="form-control" ng-model="selectedProp.tel_fijo" validate="{'type': 'phone'}"> 
-                                <span ng-show="fProp.telFijo.$invalid && fProp.telFijo.$dirty">{{fProp.telFijo.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                             <label class="col-sm-2">Tel. Móvil</label>
                             <div class="col-sm-10">
                                 <input name="telMovil" type="text" placeholder="Tel. Fijo" class="form-control" ng-model="selectedProp.tel_movil" validate="{'type': 'phone'}"> 
-                                <span ng-show="fProp.telMovil.$invalid && fProp.telMovil.$dirty">{{fProp.telMovil.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                         <div class="form-group">
                             <label class="col-sm-2">IVA</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="account" ng-model="selectedProp.iva">
+                                <select class="form-control" name="account" ng-model="selectedProp.iva" ng-required="true">
                                     <option value="cf">Consumidor Final</option>
                                     <option value="mo">Monotributista</option>
                                     <option value="ri">Responsable Inscripto</option>
@@ -179,7 +179,7 @@
                         <div class="form-group">
                             <label class="col-sm-2">Método pago</label>
                             <div class="col-sm-10">
-                                <select class="form-control" name="account" ng-model="selectedProp.metodo_pago">
+                                <select class="form-control" name="account" ng-model="selectedProp.metodo_pago" ng-required="true">
                                     <option value="0">Depósito bancario</option>
                                 </select>
                             </div>
@@ -192,7 +192,7 @@
                             <label class="col-sm-2">CBU</label>
                             <div class="col-sm-10">
                                 <input name="cbu" type="text" placeholder="CBU" class="form-control" ng-model="selectedProp.cbu" validate="{'type': 'integer'}"> 
-                                <span ng-show="fProp.cbu.$invalid && fProp.cbu.$dirty">{{fProp.cbu.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                             <label class="col-sm-2">Sucursal</label>
                             <div class="col-sm-10">
                                 <input name="sucursal" type="text" placeholder="Sucursal" class="form-control" ng-model="selectedProp.sucursal"> 
-                                <span ng-show="fProp.sucursal.$invalid && fProp.sucursal.$dirty">{{fProp.sucursal.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                             <label class="col-sm-2">Carpeta</label>
                             <div class="col-sm-10">
                                 <input name="carpeta" type="text" placeholder="Carpeta" class="form-control" ng-model="selectedProp.carpeta" validate="{'type': 'integer'}"> 
-                                <span ng-show="fProp.carpeta.$invalid && fProp.carpeta.$dirty">{{fProp.carpeta.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>

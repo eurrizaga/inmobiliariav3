@@ -25,3 +25,6 @@
 .dataTables_wrapper{
   overflow-x: scroll;
 }
+.dataTables-example a{
+  margin-right: 7px;
+}

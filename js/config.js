@@ -31,6 +31,42 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
             templateUrl: "views/minor.html",
             data: { pageTitle: 'Example view' }
         })
+        .state('operaciones', {
+            abstract: true,
+            url: "/operaciones",
+            templateUrl: "views/common/content.html",
+        })
+        .state('operaciones.disponibilidades', {
+            url: "/disponibilidades",
+            templateUrl: "views/operations/disponibilidades.html",
+            controller: DisponibilidadCtrl,
+            data: { pageTitle: 'Disponibilidades' },
+            resolve: {
+                loadPlugin: function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            insertBefore: '#loadBefore',
+                            name: 'toaster',
+                            files: ['js/plugins/toastr/toastr.min.js', 'css/plugins/toastr/toastr.min.css']
+                        },
+                        {
+                            files: ['css/plugins/iCheck/custom.css','js/plugins/iCheck/icheck.min.js']
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        },
+                        {
+                            files: ['js/plugins/daterangepicker/daterangepicker.js', 'css/plugins/daterangepicker/daterangepicker-bs3.css']
+                        },
+                        {
+                            name: 'daterangepicker',
+                            files: ['js/plugins/daterangepicker/angular-daterangepicker.js']
+                        },
+                    ]);
+                }
+            }
+        })
         .state('admin', {
             abstract: true,
             url: "/admin",
@@ -96,7 +132,19 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
                         },
                         {
                             files: ['css/plugins/iCheck/custom.css','js/plugins/iCheck/icheck.min.js']
-                        }
+                        },
+                        {
+                            name: 'datePicker',
+                            files: ['css/plugins/datapicker/angular-datapicker.css','js/plugins/datapicker/angular-datepicker.js']
+                        },
+                        {
+                            files: ['js/plugins/daterangepicker/daterangepicker.js', 'css/plugins/daterangepicker/daterangepicker-bs3.css']
+                        },
+                        {
+                            name: 'daterangepicker',
+                            files: ['js/plugins/daterangepicker/angular-daterangepicker.js']
+                        },
+                        
                     ]);
                 }
             }

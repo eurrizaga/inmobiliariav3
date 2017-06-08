@@ -1,4 +1,4 @@
-var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster) {
+var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, toaster, $window) {
     var auxProp;
     $scope.showProp = false;
     $scope.nuevoPropietario = function(){
@@ -26,13 +26,13 @@ var PropietarioCtrl = function($scope, DTOptionsBuilder, netService, $uibModal, 
         });
         */
     }
+    
     $scope.closeEdit = function(){
         $scope.selectedProp = angular.copy(auxProp);
         $scope.showProp = false;
         $scope.fProp.$setPristine();
     }
     $scope.saveProp = function(){
-        console.log($scope.selectedProp);
         var success = function(result){
             toaster.pop({
                 type: 'success',

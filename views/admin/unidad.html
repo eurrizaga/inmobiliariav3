@@ -16,8 +16,76 @@
     </div>
     <div class="col-lg-2"></div>
 </div>
-<div id="tableContainer" class="wrapper wrapper-content animated fadeInRight" ng-hide="showUnidad">
+<div id="tableContainer" class="wrapper wrapper-content animated fadeInRight" ng-hide="showUnidad || showAutorizaciones">
     <dt-search loading="loading" config="dtconfig" extensions="dtext"></dt-search>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" ng-show="showAutorizaciones">
+    <div class="ibox float-e-margins" >
+        <div class="ibox-title">
+            <h5>Autorizaciones</h5>
+            <div class="ibox-tools" uib-dropdown="">
+                <a ng-click="closeEdit()" title="Cerrar"><i class="fa fa-times"></i></a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <loader ng-show="loading"></loader>
+            <form name="fAutorizacion" class="form-horizontal" novalidate>
+                <p>Ingrese los datos de la nueva autorización.</p>
+                <fieldset>
+                    <div class="row" style="margin:0px;">
+                        <div class = "col-sm-3 offset-sm-1 col-md-3 offset-md-1 col-lg-3 offset-lg-1">
+                            <div class="form-group" >
+                                <label class="font-normal">Fecha de hoy</label>
+                                <div class="input-group date">
+                                    <input type="datetime" class="form-control" date-time ng-model="operation.date" view="date" auto-close="true" min-view="date" format="DD/MM/YYYY">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <!-- 1) agregar imagen al input y sacar el boton de calendario
+                                        2) quitar foco del elemento al seleccionar 
+                                        3) Cambiar idioma del calendario y formato de fecha para el compuesto-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "col-sm-6 col-md-6 col-lg-6">
+                            <div class="form-group" >
+                                <label class="font-normal">Periodo</label>
+                                <input date-range-picker class="form-control date-picker" type="text" ng-model="operation.range" />
+                            <!--<p class="m-t-md">https://github.com/fragaria/angular-daterangepicker</p>-->
+                            </div>
+                        </div>
+                        <div class = "col-sm-2 col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <button class="btn btn-primary pull-right" type="submit" ng-click="saveAutorizacion();" style="margin-top: 23px">Guardar cambios</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                    
+            </form>
+            <table class="table table-striped">
+                <thead><tr>
+                    <th>Fecha</th>
+                    <th>Desde</th>
+                    <th>Hasta</th>
+                    <th>Acciones</th>
+                </tr></thead>
+                <tbody>
+                    <tr ng-repeat="(k, a) in autorizaciones | orderBy: '-fecha_autorizacion'">
+                        <td>{{a.fecha_autorizacion | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{a.fecha_desde | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{a.fecha_hasta | date: 'dd/MM/yyyy'}}</td>
+                        <td class="text-navy">
+                            <a href="" ng-click="eliminarAutorizacion(a, k)">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-show="!autorizaciones.length" style="text-align: center">
+                No se encontraron autorizaciones para esta unidad
+            </div>
+        </div>
+
+        
+    </div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight" ng-show="showUnidad">
     <div class="ibox float-e-margins" >
@@ -87,7 +155,7 @@
                             <div class="form-group" ng-class="{ 'has-error': (fUnidad.numero.$invalid && fUnidad.numero.$dirty)}">
                                 <label class="col-sm-2">Número</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="numero" placeholder="numero" class="form-control" ng-model="selectedUnidad.numero" ng-required="true"><span ng-show="fUnidad.numero.$invalid && fUnidad.numero.$dirty">{{fUnidad.numero.$errorMessage}}</span>
+                                    <input type="text" name="numero" placeholder="numero" class="form-control" ng-model="selectedUnidad.numero" ng-required="true">
                                 </div>
                             </div>
                         </div>
@@ -114,7 +182,7 @@
                                 <label class="col-sm-2">Ancho</label>
                                 <div class="col-sm-10">
                                     <input name="ancho" type="text" placeholder="Ancho" class="form-control" ng-model="selectedUnidad.ancho" validate="{'type':'float', 'minValue': 1}" ng-required="true"> 
-                                    <span ng-show="fUnidad.ancho.$invalid && fUnidad.ancho.$dirty">Campo requerido</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -123,7 +191,7 @@
                                 <label class="col-sm-2">Largo</label>
                                 <div class="col-sm-10">
                                     <input name="largo" type="text" placeholder="Largo" class="form-control" ng-model="selectedUnidad.largo" validate="{'type':'float', 'minValue': 1}" ng-required="true"> 
-                                    <span ng-show="fUnidad.largo.$invalid && fUnidad.largo.$dirty">Campo requerido</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -135,7 +203,7 @@
                                 <label class="col-sm-2">Piso/Subsuelo</label>
                                 <div class="col-sm-10" >
                                     <input type="text" name="subsuelo" placeholder="Piso/Subsuelo" class="form-control" ng-model="selectedUnidad.subsuelo" ng-required="true" validate="{'type':'integer', 'minValue': 1}"> 
-                                    <span ng-show="fUnidad.subsuelo.$invalid && fUnidad.subsuelo.$dirty">Campo requerido</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -144,7 +212,7 @@
                                 <label class="col-sm-2">Ascensor</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="dist_ascensor" placeholder="Distancia" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.dist_ascensor" ng-required="true"> 
-                                    <span ng-show="fUnidad.dist_ascensor.$invalid && fUnidad.dist_ascensor.$dirty">Campo requerido</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -155,7 +223,7 @@
                                 <label class="col-sm-2">Esc. Caracol</label>
                                 <div class="col-sm-10" >
                                     <input name="dist_esc_caracol" type="text" placeholder="Distancia" validate="{'type':'integer', 'minValue': 1}" class="form-control" ng-model="selectedUnidad.dist_esc_caracol" ng-required="true"> 
-                                    <span ng-show="fUnidad.dist_esc_caracol.$invalid && fUnidad.dist_esc_caracol.$dirty">Campo requerido</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -164,7 +232,7 @@
                                 <label class="col-sm-2">Esc. Bristol</label>
                                 <div class="col-sm-10" >
                                     <input name="dist_esc_bristol" type="text" placeholder="Distancia" validate="{'type':'integer', 'minValue': 1}" class="form-control" ng-model="selectedUnidad.dist_esc_bristol"> 
-                                    <span ng-show="fUnidad.dist_esc_bristol.$invalid && fUnidad.dist_esc_bristol.$dirty">{{fUnidad.dist_esc_bristol.$errorMessage}}</span>
+                                    {{fUnidad.dist_esc_bristol.$errorMessage}}</span>
                                 </div>
                             </div>
                         </div>
@@ -175,7 +243,7 @@
                                 <label class="col-sm-2">Escalera Derecha</label>
                                 <div class="col-sm-10">
                                     <input name="escDerecha" type="text" placeholder="Distancia" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.dist_esc_der" > 
-                                    <span ng-show="fUnidad.escDerecha.$invalid && fUnidad.escDerecha.$dirty">{{fUnidad.escDerecha.$errorMessage}}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -184,7 +252,7 @@
                                 <label class="col-sm-2">Escalera Izquierda</label>
                                 <div class="col-sm-10">
                                     <input name="escIzq" type="text" placeholder="Distancia" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.dist_esc_izq" > 
-                                    <span ng-show="fUnidad.escIzq.$invalid && fUnidad.escIzq.$dirty">{{fUnidad.escIzq.$errorMessage}}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -197,7 +265,7 @@
                                 <label class="col-sm-2">Piso</label>
                                 <div class="col-sm-10">
                                     <input name="piso" type="text" placeholder="Piso" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.piso" > 
-                                    <span ng-show="fUnidad.piso.$invalid && fUnidad.piso.$dirty">{{fUnidad.piso.$errorMessage}}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -206,7 +274,7 @@
                                 <label class="col-sm-2">Letra</label>
                                 <div class="col-sm-10">
                                     <input name="letra" type="text" placeholder="Letra" class="form-control" ng-model="selectedUnidad.letra" > 
-                                    <span ng-show="fUnidad.letra.$invalid && fUnidad.letra.$dirty">{{fUnidad.letra.$errorMessage}}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -217,7 +285,7 @@
                                 <label class="col-sm-2">Ambientes</label>
                                 <div class="col-sm-10">
                                     <input name="ambientes" type="text" placeholder="Ambientes" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.ambientes" > 
-                                    <span ng-show="fUnidad.ambientes.$invalid && fUnidad.ambientes.$dirty">{{fUnidad.ambientes.$errorMessage}}</span>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -230,7 +298,7 @@
                             <label class="col-sm-2">Código</label>
                             <div class="col-sm-10">
                                 <input name="codigo" type="text" placeholder="codigo" class="form-control" ng-model="selectedUnidad.codigo"> 
-                                <span ng-show="fUnidad.codigo.$invalid && fUnidad.codigo.$dirty">{{fUnidad.codigo.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
@@ -239,7 +307,7 @@
                             <label class="col-sm-2">Carpeta</label>
                             <div class="col-sm-10">
                                 <input name="carpeta" type="text" placeholder="Carpeta" class="form-control" validate="{'type':'integer', 'minValue': 1}" ng-model="selectedUnidad.carpeta" validate="{'type': 'integer'}"> 
-                                <span ng-show="fUnidad.carpeta.$invalid && fUnidad.carpeta.$dirty">{{fUnidad.carpeta.$errorMessage}}</span>
+                                
                             </div>
                         </div>
                     </div>
